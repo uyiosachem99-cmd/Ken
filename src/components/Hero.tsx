@@ -7,7 +7,7 @@ interface HeroProps {
   onUploadAvatar?: (dataUrl: string) => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ customAvatar }) => {
+export const Hero: React.FC<HeroProps> = ({ customAvatar, onUploadAvatar }) => {
   const avatarSrc = customAvatar || portraitImg;
 
   return (
@@ -126,6 +126,33 @@ export const Hero: React.FC<HeroProps> = ({ customAvatar }) => {
 
             {/* Seamless gradient overlay blending bottom of torso into canvas floor */}
             <div className="absolute inset-x-0 bottom-0 h-20 sm:h-28 lg:h-32 bg-gradient-to-t from-[#030303] via-[#030303]/70 to-transparent pointer-events-none" />
+
+            {/* Change Avatar Button */}
+            {onUploadAvatar && (
+              <label
+                className="absolute bottom-6 right-2 sm:right-6 px-3.5 py-1.5 rounded-full bg-black/80 hover:bg-black/95 backdrop-blur-md border border-emerald-500/30 hover:border-emerald-400 text-zinc-300 hover:text-white cursor-pointer transition-all opacity-85 sm:opacity-0 sm:group-hover:opacity-100 flex items-center gap-1.5 text-xs font-semibold z-30 shadow-lg pointer-events-auto"
+                title="Change portrait photo"
+              >
+                <span>Change Photo</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        if (event.target?.result) {
+                          onUploadAvatar(event.target.result as string);
+                        }
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+              </label>
+            )}
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Project, PORTFOLIO_DATA } from '../data/portfolioData';
+import { Project, PORTFOLIO_DATA, tizelaImg } from '../data/portfolioData';
 import { ArrowUpRight, Pause, Play, ExternalLink } from 'lucide-react';
 
 interface ProjectGridProps {
@@ -86,10 +86,13 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({
   const activeFullProject =
     PORTFOLIO_DATA.projects.find((p) => p.id === activeItem.id) || PORTFOLIO_DATA.projects[0];
 
+  const rawCustom = customImages?.[activeItem.id];
+  const customImgValid = rawCustom && !rawCustom.startsWith('/src/') ? rawCustom : undefined;
+
   const currentDisplayImage =
-    customImages?.[activeItem.id] ||
+    customImgValid ||
     activeFullProject?.image ||
-    '/src/assets/images/ui_luxury_ecommerce_store_1791957194401.jpg';
+    tizelaImg;
 
   // Smooth crossfade trigger when project index changes
   useEffect(() => {

@@ -1,4 +1,24 @@
 import avatarImg from '../assets/images/kenneth-portrait.png';
+import tizelaImg from '../assets/images/tizela_showcase_1792446059964.jpg';
+import circleImg from '../assets/images/circle_showcase_1792446122933.jpg';
+import examcrushImg from '../assets/images/examcrush_showcase_1792446076851.jpg';
+import helizahImg from '../assets/images/helizah_fashion_showcase_1791989371094.jpg';
+import digiverseImg from '../assets/images/digiverse_showcase_1792446137932.jpg';
+import beatstreamImg from '../assets/images/beatstream_showcase_1792446094557.jpg';
+import primedialImg from '../assets/images/primedial_showcase_1792446109618.jpg';
+import globatrybeImg from '../assets/images/globatrybe_showcase_1792446157979.jpg';
+
+export {
+  avatarImg,
+  tizelaImg,
+  circleImg,
+  examcrushImg,
+  helizahImg,
+  digiverseImg,
+  beatstreamImg,
+  primedialImg,
+  globatrybeImg,
+};
 
 export interface ProjectPersona {
   name: string;
@@ -255,7 +275,7 @@ export const PORTFOLIO_DATA = {
       role: "Lead Product Designer",
       summary: "Platform enabling users to seamlessly book accommodations, rent vehicles, and embark on boat cruises tailored to travel destinations.",
       tags: ["Travel Tech", "Accommodations", "Vehicle Rentals", "Boat Cruises", "Mobile & Web"],
-      image: "/src/assets/images/ui_luxury_ecommerce_store_1791957194401.jpg",
+      image: tizelaImg,
       overview: "Tizela is a platform enabling users to seamlessly book accommodations, rent vehicles, and embark on boat cruises tailored to their travel destinations. Whether exploring a city or relaxing by the water, Tizela ensures memorable and convenient experiences at every location.",
       challenge: "Unifying fundamentally different travel verticals—boutique stays, vehicle rentals, and boat cruises—into a singular, intuitive booking flow without confusing users with complex scheduling, disparate policies, or cluttered search forms.",
       solution: "Architected an integrated multi-modal travel discovery engine with destination-tailored filters, unified calendar booking, and a frictionless single-basket checkout for stays, wheels, and boat cruises.",
@@ -296,7 +316,7 @@ export const PORTFOLIO_DATA = {
       role: "Product Designer",
       summary: "Platform enabling users to form groups and set up daily, weekly, or monthly contribution cycles with scheduled full payouts.",
       tags: ["Social Finance", "Contribution Cycles", "Group Savings", "FinTech", "Mobile App"],
-      image: "/src/assets/images/case_fintech_banking_1791922139254.jpg",
+      image: circleImg,
       overview: "Circle platform enables users to form groups and set up contribution cycles on a daily, weekly, or monthly basis. Each participant in the cycle receives their full payout on the specific day or week they selected, ensuring a seamless and organized experience.",
       challenge: "Eliminating the friction, anxiety, and default risk inherent in traditional community rotating savings groups, while ensuring prompt payouts and building trust among participants.",
       solution: "Designed an automated cycle scheduler with clear calendar timelines, automated escrow debiting, peer transparency indicators, and one-tap payout distribution on each member's chosen date.",
@@ -337,7 +357,7 @@ export const PORTFOLIO_DATA = {
       role: "Product Designer",
       summary: "AI mobile app where students upload course materials to convert into games, create quizzes, challenge friends, and earn rewards.",
       tags: ["AI Learning", "Mobile App", "Gamified Quizzes", "Course Conversion", "Social Rewards"],
-      image: "/src/assets/images/ui_saas_workflow_canvas_1791957193792.jpg",
+      image: examcrushImg,
       overview: "Examcrush is an Ai Mobile App platform where students can upload course materials and it get coverted into a game which people can play and get knowledge about the course. Also on this product, users can also create games and quiz, share and play it with friends and earn fantastic rewards on it.",
       challenge: "Transforming dense, dry lecture slides, PDFs, and syllabus documents into engaging, bite-sized mobile games without losing academic rigor or overwhelming learners.",
       solution: "Architected an AI-powered course material converter that parses uploaded lecture notes into interactive quiz games, multiplayer battle arenas, and social reward leagues.",
@@ -378,7 +398,7 @@ export const PORTFOLIO_DATA = {
       role: "Lead Product Designer",
       summary: "Women's fashion e-commerce website and admin web app with pickup-location delivery and streamlined logistics.",
       tags: ["Women's Fashion", "E-Commerce Storefront", "Admin Web App", "Pickup Locations", "Logistics"],
-      image: "/src/assets/images/helizah_fashion_showcase_1791989371094.jpg",
+      image: helizahImg,
       overview: "Helizah This is an e-commerce platform tailored for women’s fashion. Our work included creating the website and admin web application, ensuring a visually appealing, user-friendly experience. The platform allows customers to shop effortlessly for clothing and have their orders delivered to convenient pick-up locations, with the admin dashboard streamlining order management and logistics.",
       challenge: "Balancing an aspirational, editorial storefront for fashion shoppers with a dense, error-proof back-office for warehouse dispatch and pickup station management.",
       solution: "Engineered an editorial shopping experience with seamless clothing filters and interactive pickup location finders, paired with a high-contrast admin dashboard for order dispatch, inventory sync, and logistics telemetry.",
@@ -419,7 +439,7 @@ export const PORTFOLIO_DATA = {
       role: "Digital Design Director",
       summary: "Comprehensive creative agency platform with interconnected websites for studio, academy, consulting, and influencer branches.",
       tags: ["Creative Ecosystem", "Multi-Site IA", "Creative Studio", "Design Academy", "Influencer Platform"],
-      image: "/src/assets/images/case_luxury_commerce_1791922140396.jpg",
+      image: digiverseImg,
       overview: "Digiverse This is a comprehensive creative agency platform featuring multiple interconnected websites — including an overview landing page, a creative studio site, an academy site, a consulting site, and an influencer site. The design focused on a unified visual identity, seamless navigation between sections, and a user-centered experience that showcases the agency’s diverse offerings in a cohesive digital ecosystem.",
       challenge: "Unifying 5 distinct agency departments into one coherent digital ecosystem without confusing visitors or fragmenting the brand identity.",
       solution: "Designed an interconnected multi-site architecture with a persistent global ecosystem switcher, shared design tokens, immersive studio showcases, and tailored conversion paths for students, brands, and creators.",
@@ -460,7 +480,7 @@ export const PORTFOLIO_DATA = {
       role: "UI/UX Designer",
       summary: "Dynamic platform to listen to music, stream live concerts, and empower artists to upload tracks and host live performances.",
       tags: ["Music Streaming", "Live Concerts", "Artist Uploads", "Live Performances", "Mobile App"],
-      image: "/src/assets/images/ui_health_circadian_tracker_1791957218861.jpg",
+      image: beatstreamImg,
       overview: "Beatstream This platform allows users to listen to music, stream live concerts, and provides artists with the ability to upload their tracks or host live performances, creating a dynamic space for music lovers and creators to connect and share experiences.",
       challenge: "Unifying personal high-fidelity music playback with interactive live-streamed concerts and self-serve creator monetization tools in a fast, battery-efficient mobile interface.",
       solution: "Crafted a tactile, vinyl-inspired mobile streaming player with live audio waveform scrubbing, real-time virtual concert auditoriums with fan tipping, and a dedicated artist studio for uploading tracks and scheduling live performances.",
@@ -501,7 +521,7 @@ export const PORTFOLIO_DATA = {
       role: "Senior UI/UX Specialist",
       summary: "Platform showcasing innovative surveying, mapping, and geospatial services for construction, oil & gas, and real estate.",
       tags: ["Geospatial", "Surveying & Mapping", "Construction", "Oil & Gas", "Enterprise Web"],
-      image: "/src/assets/images/ui_design_tokens_library_1791957218658.jpg",
+      image: primedialImg,
       overview: "Primedial A platform to showcase innovative surveying, mapping, and geospatial services for sectors like construction, oil & gas, and real estate. This design emphasized clarity, trust, and a modern visual language to effectively communicate expertise and attract industry clients.",
       challenge: "Communicating heavy technical surveying capabilities, drone LiDAR accuracy, and regulatory compliance standards in an approachable, authoritative visual format that converts corporate decision-makers.",
       solution: "Crafted a high-authority dark corporate platform featuring interactive 3D terrain and orthomosaic map explorers, sector-specific solution pathways (construction, energy, property), and an instant enterprise RFP inquiry funnel.",
@@ -542,7 +562,7 @@ export const PORTFOLIO_DATA = {
       role: "Principal Product Designer",
       summary: "Product developing and managing innovative software solutions for banking, non-banking financial institutions, and fintech pioneers.",
       tags: ["FinTech", "Banking Infrastructure", "Financial Institutions", "Software Solutions", "Compliance"],
-      image: "/src/assets/images/ui_fintech_mobile_app_1791957193227.jpg",
+      image: globatrybeImg,
       overview: "Globatrybe A product designed to develop and manage innovative software solutions tailored for banking and non-banking financial institutions, fintech companies, and other pioneers in the financial markets, driving efficiency, compliance, and customer-centric services through cutting-edge technology and expertise.",
       challenge: "Instilling unquestioned institutional credibility and security trust for cutting-edge financial software solutions targeted at Tier-1 commercial banks, neobanks, and regulatory bodies.",
       solution: "Developed a commanding, modern corporate product platform featuring interactive API architecture breakdowns, live compliance verification highlights, institutional product suites, and an executive demo booking portal.",

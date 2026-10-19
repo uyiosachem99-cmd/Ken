@@ -25,7 +25,9 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [project.id]);
 
-  const currentImage = customImage || project.image;
+  const rawCustom = customImage;
+  const customImgValid = rawCustom && !rawCustom.startsWith('/src/') ? rawCustom : undefined;
+  const currentImage = customImgValid || project.image;
 
   // Find index of current project to allow Next / Previous navigation
   const currentIndex = PORTFOLIO_DATA.projects.findIndex((p) => p.id === project.id);
@@ -190,10 +192,10 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                 referrerPolicy="no-referrer"
               />
               
-              {/* Subtle upload / swap button on hover */}
+              {/* Subtle upload / swap button */}
               {onUpdateImage && (
                 <label
-                  className="absolute top-3 right-3 px-3.5 py-2 rounded-full bg-black/80 hover:bg-black/95 backdrop-blur-md border border-white/20 text-zinc-300 hover:text-white cursor-pointer transition-all opacity-0 group-hover:opacity-100 flex items-center gap-1.5 text-xs font-semibold z-10 shadow-lg font-['Syne',sans-serif]"
+                  className="absolute top-3 right-3 px-3.5 py-2 rounded-full bg-black/80 hover:bg-black/95 backdrop-blur-md border border-emerald-500/30 hover:border-emerald-400 text-zinc-200 hover:text-white cursor-pointer transition-all opacity-85 sm:opacity-0 sm:group-hover:opacity-100 flex items-center gap-1.5 text-xs font-semibold z-10 shadow-lg font-['Syne',sans-serif]"
                   title="Upload picture for this project"
                 >
                   <Upload className="w-3.5 h-3.5 text-emerald-400" />

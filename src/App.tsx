@@ -9,11 +9,20 @@ import { ResumeModal } from './components/ResumeModal';
 import { Footer } from './components/Footer';
 
 export default function App() {
-  // Custom uploaded/swapped images by key (persisted in localStorage)
   const [customImages, setCustomImages] = useState<Record<string, string>>(() => {
     try {
       const saved = localStorage.getItem('uyiosa_portfolio_custom_images');
-      return saved ? JSON.parse(saved) : {};
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const cleaned: Record<string, string> = {};
+        for (const [k, v] of Object.entries(parsed)) {
+          if (typeof v === 'string' && (v.startsWith('data:') || v.startsWith('blob:') || v.startsWith('http'))) {
+            cleaned[k] = v;
+          }
+        }
+        return cleaned;
+      }
+      return {};
     } catch {
       return {};
     }
