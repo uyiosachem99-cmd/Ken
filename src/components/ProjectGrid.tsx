@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Project, PORTFOLIO_DATA, tizelaImg } from '../data/portfolioData';
+import { Project, PORTFOLIO_DATA, OFFICIAL_PROJECT_IMAGES, tizelaImg } from '../data/portfolioData';
 import { ArrowUpRight, Pause, Play, ExternalLink } from 'lucide-react';
+import { normalizeProjectId } from '../utils/imageHelper';
 
 interface ProjectGridProps {
   customImages?: Record<string, string>;
@@ -86,13 +87,17 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({
   const activeFullProject =
     PORTFOLIO_DATA.projects.find((p) => p.id === activeItem.id) || PORTFOLIO_DATA.projects[0];
 
-  const rawCustom = customImages?.[activeItem.id];
+  const canonicalId = normalizeProjectId(activeItem.id);
+  const rawCustom = customImages?.[activeItem.id] || customImages?.[canonicalId];
   const customImgValid = rawCustom && !rawCustom.startsWith('/src/') ? rawCustom : undefined;
 
-  const currentDisplayImage =
-    customImgValid ||
+  const officialFallback =
+    OFFICIAL_PROJECT_IMAGES[canonicalId] ||
+    OFFICIAL_PROJECT_IMAGES[activeItem.id] ||
     activeFullProject?.image ||
     tizelaImg;
+
+  const currentDisplayImage = customImgValid || officialFallback;
 
   // Smooth crossfade trigger when project index changes
   useEffect(() => {

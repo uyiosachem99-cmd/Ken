@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { Camera, Loader2 } from 'lucide-react';
 import portraitImg from '../assets/images/kenneth-portrait.png';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
+import { compressImageFile } from '../utils/imageHelper';
 
 interface HeroProps {
   customAvatar?: string;
@@ -8,6 +10,8 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ customAvatar, onUploadAvatar }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const heroFileInputRef = useRef<HTMLInputElement | null>(null);
   const avatarSrc = customAvatar || portraitImg;
 
   return (
@@ -127,34 +131,53 @@ export const Hero: React.FC<HeroProps> = ({ customAvatar, onUploadAvatar }) => {
             {/* Seamless gradient overlay blending bottom of torso into canvas floor */}
             <div className="absolute inset-x-0 bottom-0 h-20 sm:h-28 lg:h-32 bg-gradient-to-t from-[#030303] via-[#030303]/70 to-transparent pointer-events-none" />
 
-            {/* Change Avatar Button */}
+            {/* Change Avatar Button on portrait - prominent, always clickable on desktop and mobile */}
             {onUploadAvatar && (
-              <label
-                className="absolute bottom-6 right-2 sm:right-6 px-3.5 py-1.5 rounded-full bg-black/80 hover:bg-black/95 backdrop-blur-md border border-emerald-500/30 hover:border-emerald-400 text-zinc-300 hover:text-white cursor-pointer transition-all opacity-85 sm:opacity-0 sm:group-hover:opacity-100 flex items-center gap-1.5 text-xs font-semibold z-30 shadow-lg pointer-events-auto"
-                title="Change portrait photo"
+              <button
+                type="button"
+                onClick={() => heroFileInputRef.current?.click()}
+                disabled={isProcessing}
+                className={`absolute bottom-5 right-2 sm:right-6 px-4 py-2 rounded-full bg-black/85 hover:bg-black text-zinc-200 hover:text-white border border-emerald-500/50 hover:border-emerald-400 backdrop-blur-md cursor-pointer transition-all flex items-center gap-2 text-xs font-semibold z-30 shadow-2xl pointer-events-auto active:scale-95 group/btn ${
+                  isProcessing ? 'opacity-70 pointer-events-none' : ''
+                }`}
+                title="Change portrait photo (sitting at the back)"
               >
-                <span>Change Photo</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        if (event.target?.result) {
-                          onUploadAvatar(event.target.result as string);
-                        }
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                />
-              </label>
+                {isProcessing ? (
+                  <Loader2 className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
+                ) : (
+                  <Camera className="w-3.5 h-3.5 text-emerald-400 group-hover/btn:scale-110 transition-transform" />
+                )}
+                <span>{isProcessing ? 'Saving...' : 'Change Photo'}</span>
+              </button>
             )}
           </div>
         </div>
+
+        {/* Hidden File Input for Hero Portrait */}
+        {onUploadAvatar && (
+          <input
+            ref={heroFileInputRef}
+            type="file"
+            accept="image/*"
+            disabled={isProcessing}
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setIsProcessing(true);
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  setIsProcessing(false);
+                  if (event.target?.result) {
+                    onUploadAvatar(event.target.result as string);
+                  }
+                };
+                reader.onerror = () => setIsProcessing(false);
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+        )}
 
         {/* --- LAYER 3: LEFT-SIDE INTRODUCTION & CTA (Center-aligned on mobile and tablet, left-aligned on desktop) --- */}
         <div className="relative lg:absolute lg:left-6 xl:left-12 lg:top-[calc(33%+115px)] xl:top-[calc(31%+115px)] lg:bottom-auto z-30 flex flex-col items-center text-center lg:items-start lg:text-left max-w-[340px] sm:max-w-md lg:max-w-[340px] xl:max-w-[370px] mt-6 sm:mt-8 lg:mt-0 px-4 sm:px-0 mx-auto lg:mx-0 pointer-events-auto">
@@ -172,13 +195,28 @@ export const Hero: React.FC<HeroProps> = ({ customAvatar, onUploadAvatar }) => {
             Hey there! I’m Kenneth, a Product Designer creating intuitive digital experiences that connect user needs with business goals.
           </p>
 
-          {/* Solid White Pill CTA Button */}
-          <a
-            href={`mailto:${PORTFOLIO_DATA.profile.email}?subject=Project%20Inquiry%20-%20Kenneth`}
-            className="px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-white hover:bg-zinc-200 text-black font-['Syne',sans-serif] font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg shadow-white/5 active:scale-95 inline-flex items-center justify-center cursor-pointer tracking-tight"
-          >
-            <span>Schedule a Call</span>
-          </a>
+          {/* Action Buttons: Schedule a Call & Change Hero Photo (Laptop / Desktop friendly) */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3">
+            <a
+              href={`mailto:${PORTFOLIO_DATA.profile.email}?subject=Project%20Inquiry%20-%20Kenneth`}
+              className="px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-white hover:bg-zinc-200 text-black font-['Syne',sans-serif] font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg shadow-white/5 active:scale-95 inline-flex items-center justify-center cursor-pointer tracking-tight"
+            >
+              <span>Schedule a Call</span>
+            </a>
+
+            {onUploadAvatar && (
+              <button
+                type="button"
+                onClick={() => heroFileInputRef.current?.click()}
+                disabled={isProcessing}
+                className="px-4 py-2.5 sm:py-3 rounded-full bg-white/10 hover:bg-white/15 text-white border border-white/20 hover:border-emerald-400/50 font-['Syne',sans-serif] font-semibold text-xs sm:text-sm transition-all duration-200 shadow-sm active:scale-95 inline-flex items-center justify-center cursor-pointer gap-2"
+                title="Change portrait photo on your laptop"
+              >
+                <Camera className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{isProcessing ? 'Saving...' : 'Change Photo'}</span>
+              </button>
+            )}
+          </div>
 
         </div>
 

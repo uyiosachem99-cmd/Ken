@@ -7,37 +7,24 @@ import { DesignPhilosophy } from './components/DesignPhilosophy';
 import { ProjectDetailPage } from './components/ProjectDetailPage';
 import { ResumeModal } from './components/ResumeModal';
 import { Footer } from './components/Footer';
+import {
+  loadSavedCustomImages,
+  persistCustomImages,
+  normalizeProjectId,
+  PROJECT_ALIASES,
+} from './utils/imageHelper';
 
 export default function App() {
-  const [customImages, setCustomImages] = useState<Record<string, string>>(() => {
-    try {
-      const saved = localStorage.getItem('uyiosa_portfolio_custom_images');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        const cleaned: Record<string, string> = {};
-        for (const [k, v] of Object.entries(parsed)) {
-          if (typeof v === 'string' && (v.startsWith('data:') || v.startsWith('blob:') || v.startsWith('http'))) {
-            cleaned[k] = v;
-          }
-        }
-        return cleaned;
-      }
-      return {};
-    } catch {
-      return {};
-    }
-  });
+  const [customImages, setCustomImages] = useState<Record<string, string>>(() =>
+    loadSavedCustomImages()
+  );
 
   const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   const findProject = (projectId: string) => {
+    const canonical = normalizeProjectId(projectId);
     return (
-      PORTFOLIO_DATA.projects.find(
-        (p) =>
-          p.id === projectId ||
-          (projectId === 'eliza' && p.id === 'helizah') ||
-          (projectId === 'beastream' && p.id === 'beatstream')
-      ) || null
+      PORTFOLIO_DATA.projects.find((p) => p.id === canonical || p.id === projectId) || null
     );
   };
 
@@ -55,18 +42,45 @@ export default function App() {
 
   // Allow uploading custom avatar or project image
   const handleUploadImage = (key: string, dataUrl: string) => {
-    const updated = { ...customImages, [key]: dataUrl };
+    const canonical = normalizeProjectId(key);
+    const updated = {
+      ...customImages,
+      [canonical]: dataUrl,
+    };
     setCustomImages(updated);
     try {
       localStorage.setItem('uyiosa_portfolio_custom_images', JSON.stringify(updated));
     } catch (e) {
-      console.warn('Could not persist image to localStorage', e);
+      console.warn('Storage save warning', e);
     }
+    // Also save directly to server file system in background
+    try {
+      fetch('/api/persist-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: { [canonical]: dataUrl } }),
+      }).catch(() => {});
+    } catch {}
   };
 
   const handleUploadAvatar = (dataUrl: string) => {
     handleUploadImage('avatar', dataUrl);
   };
+
+  // Automatically write any custom uploaded images permanently to the project files on disk
+  useEffect(() => {
+    const keys = Object.keys(customImages);
+    if (keys.length === 0) return;
+    try {
+      fetch('/api/persist-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: customImages }),
+      }).catch(() => {});
+    } catch {
+      // safe fallback on static hosting
+    }
+  }, [customImages]);
 
   // Handle URL hash changes (browser back/forward button navigation)
   useEffect(() => {
@@ -178,7 +192,10 @@ export default function App() {
       {selectedProject ? (
         <ProjectDetailPage
           project={selectedProject}
-          customImage={customImages[selectedProject.id]}
+          customImage={
+            customImages[selectedProject.id] ||
+            customImages[normalizeProjectId(selectedProject.id)]
+          }
           onBack={handleBackToPortfolio}
           onSelectProject={(nextP) => {
             setSelectedProject(nextP);

@@ -1,7 +1,9 @@
 import React from 'react';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
 
-export const Footer: React.FC = () => {
+interface FooterProps {}
+
+export const Footer: React.FC<FooterProps> = () => {
   const currentYear = new Date().getFullYear();
 
   return (

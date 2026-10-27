@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Project, PORTFOLIO_DATA } from '../data/portfolioData';
-import { ArrowLeft, ArrowUpRight, CheckCircle2, Mail, Upload, ExternalLink, Globe, Check } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Project, PORTFOLIO_DATA, OFFICIAL_PROJECT_IMAGES } from '../data/portfolioData';
+import { ArrowLeft, ArrowUpRight, CheckCircle2, Mail, Upload, ExternalLink, Globe, Check, Loader2 } from 'lucide-react';
+import { compressImageFile, normalizeProjectId } from '../utils/imageHelper';
 
 interface ProjectDetailPageProps {
   project: Project;
@@ -19,15 +20,19 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   onUpdateImage,
 }) => {
   const [copiedLink, setCopiedLink] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Scroll to top when project changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [project.id]);
 
+  const canonicalId = normalizeProjectId(project.id);
   const rawCustom = customImage;
   const customImgValid = rawCustom && !rawCustom.startsWith('/src/') ? rawCustom : undefined;
-  const currentImage = customImgValid || project.image;
+  const officialFallback = OFFICIAL_PROJECT_IMAGES[canonicalId] || OFFICIAL_PROJECT_IMAGES[project.id] || project.image;
+  const currentImage = customImgValid || officialFallback;
 
   // Find index of current project to allow Next / Previous navigation
   const currentIndex = PORTFOLIO_DATA.projects.findIndex((p) => p.id === project.id);
@@ -39,12 +44,15 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && onUpdateImage) {
+      setIsProcessing(true);
       const reader = new FileReader();
       reader.onload = (event) => {
+        setIsProcessing(false);
         if (event.target?.result) {
           onUpdateImage(project.id, event.target.result as string);
         }
       };
+      reader.onerror = () => setIsProcessing(false);
       reader.readAsDataURL(file);
     }
   };
@@ -192,21 +200,34 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                 referrerPolicy="no-referrer"
               />
               
-              {/* Subtle upload / swap button */}
+              {/* Change Picture button - clearly visible and reliable on desktop and mobile */}
               {onUpdateImage && (
-                <label
-                  className="absolute top-3 right-3 px-3.5 py-2 rounded-full bg-black/80 hover:bg-black/95 backdrop-blur-md border border-emerald-500/30 hover:border-emerald-400 text-zinc-200 hover:text-white cursor-pointer transition-all opacity-85 sm:opacity-0 sm:group-hover:opacity-100 flex items-center gap-1.5 text-xs font-semibold z-10 shadow-lg font-['Syne',sans-serif]"
-                  title="Upload picture for this project"
-                >
-                  <Upload className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Change Picture</span>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isProcessing}
+                    className={`absolute top-3 right-3 px-3.5 py-2 rounded-full bg-black/85 hover:bg-black backdrop-blur-md border border-emerald-500/40 hover:border-emerald-400 text-zinc-100 hover:text-white cursor-pointer transition-all opacity-95 hover:opacity-100 flex items-center gap-1.5 text-xs font-semibold z-20 shadow-xl font-['Syne',sans-serif] active:scale-95 group/btn ${
+                      isProcessing ? 'opacity-70 pointer-events-none' : ''
+                    }`}
+                    title="Change picture for this project"
+                  >
+                    {isProcessing ? (
+                      <Loader2 className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
+                    ) : (
+                      <Upload className="w-3.5 h-3.5 text-emerald-400 group-hover/btn:scale-110 transition-transform" />
+                    )}
+                    <span>{isProcessing ? 'Saving to Codebase...' : 'Change Picture'}</span>
+                  </button>
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
+                    disabled={isProcessing}
                     className="hidden"
                     onChange={handleFileChange}
                   />
-                </label>
+                </>
               )}
             </div>
           </div>

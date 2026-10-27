@@ -20,6 +20,24 @@ export {
   globatrybeImg,
 };
 
+export const OFFICIAL_PROJECT_IMAGES: Record<string, string> = {
+  tizela: tizelaImg,
+  circle: circleImg,
+  sarko: circleImg,
+  examcrush: examcrushImg,
+  helizah: helizahImg,
+  digiverse: digiverseImg,
+  beatstream: beatstreamImg,
+  primedial: primedialImg,
+  primedeal: primedialImg,
+  'prime-deal': primedialImg,
+  'primedial-solutions': primedialImg,
+  globatrybe: globatrybeImg,
+  globaltribe: globatrybeImg,
+  'global-tribe': globatrybeImg,
+  avatar: avatarImg,
+};
+
 export interface ProjectPersona {
   name: string;
   role: string;
